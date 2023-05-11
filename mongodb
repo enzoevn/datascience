@@ -1,7 +1,0 @@
-#MongoDb
-
-```bash
-> show dbs
-local  0.000GB
-test  0.000GB
-```
