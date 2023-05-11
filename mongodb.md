@@ -240,24 +240,162 @@ Para operadores $eq $gt $gte $lt $lte $ne
 ```bash
 { <field>: { $eq: <value> } }
 ```
+Ejemplo:
+
+```bash
+db.pasajeros.find({ name: { $eq: "Manu Lorenz" } })
+```
+
+```bash
+[
+  {
+    _id: ObjectId("645c45dcd0d181775cd326c3"),
+    name: 'Manu Lorenz',
+    age: 30
+  }
+]
+```
+
+```bash
+db.pasajeros.find({ age: { $gte: 30 } })
+```
+
+```bash
+[
+  {
+    _id: ObjectId("645c45dcd0d181775cd326c3"),
+    name: 'Manu Lorenz',
+    age: 30
+  },
+  {
+    _id: ObjectId("645c45dcd0d181775cd326c4"),
+    name: 'Chris Hayton',
+    age: 35
+  },
+  {
+    _id: ObjectId("645c45dcd0d181775cd326c6"),
+    name: 'Maria Jones',
+    age: 30
+  }
+]
+```
+
 Para operador $in y $nin
 
 ```bash
 { field: { $in: [ <value1>, <value2> ... <valueN> ] } }
 ```
+Ejemplos:
+
+```bash
+db.pasajeros.find({ name: { $in: [ "Chris Hayton", "Maria Jones" ] } })
+```
+
+```bash
+[
+  {
+    _id: ObjectId("645c45dcd0d181775cd326c4"),
+    name: 'Chris Hayton',
+    age: 35
+  },
+  {
+    _id: ObjectId("645c45dcd0d181775cd326c6"),
+    name: 'Maria Jones',
+    age: 30
+  }
+]
+```
+
 Para operadores lógicos $and $or y $nor:
 
 ```bash
 { $and: [ { <expression1> }, { <expression2> } , ... , { <expressionN> } ] }
 ```
+
+Ejemplos:
+
+```bash
+db.pasajeros.find({ $and: [ { name: { $in: [ "Chris Hayton", "Maria Jones" ] } }, { age: { $eq: 30 } } ] })
+```
+```bash
+[
+  {
+    _id: ObjectId("645c45dcd0d181775cd326c6"),
+    name: 'Maria Jones',
+    age: 30
+  }
+]
+```
+
 Para operador lógico $not
 ```bash
 { field: { $not: { <operator-expression> } } }
 ```
+
+Ejemplo:
+```bash
+db.pasajeros.find({ $and: [ { name: { $in: [ "Chris Hayton", "Maria Jones" ] } }, { age: { $not: { $eq: 30 }  } } ] })
+```
+```bash
+[
+  {
+    _id: ObjectId("645c45dcd0d181775cd326c4"),
+    name: 'Chris Hayton',
+    age: 35
+  }
+]
+```
+
 Para $exist
 
 ```bash
 { field: { $exists: <boolean> } }
+```
+
+Ejemplos:
+
+```bash
+db.pasajeros.find({ name: { $exists: true } })
+```
+
+```bash
+[
+{
+_id: ObjectId("645c4518d0d181775cd326c1"),
+name: 'Max Schwarzmueller',
+age: 29
+},
+{
+_id: ObjectId("645c45dcd0d181775cd326c2"),
+name: 'Max Schwarzmueller',
+age: 29
+},
+{
+_id: ObjectId("645c45dcd0d181775cd326c3"),
+name: 'Manu Lorenz',
+age: 30
+},
+{
+_id: ObjectId("645c45dcd0d181775cd326c4"),
+name: 'Chris Hayton',
+age: 35
+},
+{
+_id: ObjectId("645c45dcd0d181775cd326c5"),
+name: 'Sandeep Kumar',
+age: 28
+},
+{
+_id: ObjectId("645c45dcd0d181775cd326c6"),
+name: 'Maria Jones',
+age: 30
+}
+]
+```
+
+La instrucción siguiente es equivalente a { $exists: true } :
+```bash
+{ $ne: null }
 ```
 
 Para $type
@@ -266,8 +404,49 @@ Para $type
 { field: { $type: <BSON type> } }
 { field: { $type: [ <BSON type1> , <BSON type2>, ... ] } }
 ```
+```bash
+db.pasajeros.find( { "name" : { $type : 2 } } )
+```
+```bash
+db.pasajeros.find( { "name" : { $type : "string" } } )
+```
+
+```bash
+[
+{
+_id: ObjectId("645c4518d0d181775cd326c1"),
+name: 'Max Schwarzmueller',
+age: 29
+},
+{
+_id: ObjectId("645c45dcd0d181775cd326c2"),
+name: 'Max Schwarzmueller',
+age: 29
+},
+{
+_id: ObjectId("645c45dcd0d181775cd326c3"),
+name: 'Manu Lorenz',
+age: 30
+},
+{
+_id: ObjectId("645c45dcd0d181775cd326c4"),
+name: 'Chris Hayton',
+age: 35
+},
+{
+_id: ObjectId("645c45dcd0d181775cd326c5"),
+name: 'Sandeep Kumar',
+age: 28
+},
+{
+_id: ObjectId("645c45dcd0d181775cd326c6"),
+name: 'Maria Jones',
+age: 30
+}
+]
+```
+Muestra todos los documentos por que todos los nombres son string.
+
 
 Los tipos pueden filtrarse por su nombre o por su código numérico, para ver los códigos numéricos de los diferentes tipos ingresar a:
 https://www.mongodb.com/docs/manual/reference/operator/query/type/#-type
-
-
